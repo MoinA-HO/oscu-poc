@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The Domain layer is deliberately dependency-free: no EF Core, no DI
+    container, no ASP.NET. If this file ever grows a PackageReference, that is
+    a signal something has leaked inwards.
+
+    (The source template referenced Microsoft.Extensions.DependencyInjection
+    here purely to host an AddDomainDependencies() method that registered
+    nothing. Removed.)
+  -->
+
+</Project>

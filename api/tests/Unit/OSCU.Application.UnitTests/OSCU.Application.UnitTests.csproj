@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\OSCU.Application\OSCU.Application.csproj" />
+  </ItemGroup>
+
+</Project>

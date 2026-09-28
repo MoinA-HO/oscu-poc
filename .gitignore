@@ -1,0 +1,35 @@
+# .NET
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.suo
+TestResults/
+coverage*.xml
+coverage*.json
+*.coverage
+.vs/
+
+# Rider / VS Code
+.idea/
+.vscode/*
+!.vscode/launch.json
+!.vscode/settings.json
+
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+.vite/
+coverage/
+
+# Environment — never commit real secrets, use dotnet user-secrets or Key Vault
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db

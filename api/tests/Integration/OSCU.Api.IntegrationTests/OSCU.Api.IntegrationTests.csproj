@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
+    <!--
+      Real PostgreSQL in a throwaway container, not the EF in-memory provider.
+      In-memory does not enforce unique indexes, has no
+      'timestamp with time zone' type, and translates LINQ differently — so a
+      suite built on it passes while the behaviour that matters goes untested.
+    -->
+    <PackageReference Include="Testcontainers.PostgreSql" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\OSCU.Api\OSCU.Api.csproj" />
+  </ItemGroup>
+
+</Project>

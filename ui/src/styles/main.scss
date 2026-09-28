@@ -1,0 +1,18 @@
+// The GOV.UK Design System stylesheet.
+//
+// The Home Office Design System is a themed layer on top of this, so building
+// against govuk-frontend now means the markup and class names already match
+// what @ukhoautomation/hods-react produces. See src/components/hods/README.md.
+@use 'govuk-frontend/dist/govuk/index' as * with (
+  $govuk-assets-path: '/assets/'
+);
+
+// Small project-level additions only. Anything that looks like a new component
+// belongs in the design system, not here.
+.app-width-container {
+  @include govuk-width-container;
+}
+
+.app-table__cell--numeric {
+  text-align: right;
+}

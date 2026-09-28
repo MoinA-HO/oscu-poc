@@ -1,0 +1,93 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: referral-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: referral_dev_db
+    ports:
+      - '5432:5432'
+    volumes:
+      # /var/lib/postgresql, NOT /var/lib/postgresql/data.
+      #
+      # PostgreSQL 18 moved PGDATA to /var/lib/postgresql/18/docker and declares
+      # its VOLUME at /var/lib/postgresql. Mounting the pre-18 path puts a
+      # root-owned mount where the entrypoint does not expect one, and the
+      # container exits before it can initialise.
+      - postgres_data:/var/lib/postgresql
+    healthcheck:
+      # The template had no healthcheck, so `docker compose up` returned before
+      # Postgres was actually accepting connections and `dotnet ef database
+      # update` would intermittently fail on a cold start.
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d referral_dev_db']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: referral-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@localhost.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      # Desktop mode: no login screen, no master password prompt.
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+      # Pre-registers the server below, so pgAdmin opens onto the database
+      # rather than an empty connection form.
+      PGADMIN_SERVER_JSON_FILE: /pgadmin4/servers.json
+    ports:
+      - '8080:80'
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    configs:
+      - source: pgadmin_servers
+        target: /pgadmin4/servers.json
+      - source: pgadmin_pgpass
+        target: /pgpass
+        # Compose writes configs as root by default. pgAdmin runs as uid 5050,
+        # so with mode 0600 it cannot read the file and behaves as though no
+        # passfile exists ("fe_sendauth: no password supplied"). 0600 is still
+        # required — pgAdmin ignores a passfile it considers world-readable —
+        # so ownership has to move instead of loosening the mode.
+        uid: '5050'
+        gid: '5050'
+        mode: 0600
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+# Inline configs keep the whole local environment in this one file — no
+# sidecar directory of mount fragments to keep in sync.
+# Requires Docker Compose v2.23.1 or newer for `content`.
+configs:
+  pgadmin_servers:
+    content: |
+      {
+        "Servers": {
+          "1": {
+            "Name": "OSCU Local",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "referral_dev_db",
+            "Username": "postgres",
+            "PassFile": "/pgpass",
+            "SSLMode": "prefer"
+          }
+        }
+      }
+
+  # Host is the compose service name, not localhost: pgAdmin runs in its own
+  # container, where localhost would mean pgAdmin itself.
+  # Format is hostname:port:database:username:password
+  pgadmin_pgpass:
+    content: |
+      postgres:5432:*:postgres:postgres
+
+volumes:
+  postgres_data:
+  pgadmin_data:

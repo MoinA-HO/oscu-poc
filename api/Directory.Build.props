@@ -1,0 +1,35 @@
+<Project>
+
+  <!--
+    Shared build settings for every project in the solution.
+    Fixes a defect in the source template, where TargetFramework, Nullable and
+    ImplicitUsings were repeated in all eleven .csproj files and free to drift.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <!--
+      Warnings are errors in Release only. CI builds Release, so the gate is
+      enforced where it matters, without a stray analyzer warning blocking
+      someone mid-refactor in Debug.
+    -->
+    <TreatWarningsAsErrors Condition="'$(Configuration)' == 'Release'">true</TreatWarningsAsErrors>
+    <!--
+      Required for IDE0005 (unused usings) to run at build time — the analyser
+      is disabled without it. CS1591 is suppressed so enabling it does not then
+      demand an XML doc comment on every public member.
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <!-- Test projects are never packed and always collect coverage. -->
+  <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('Tests'))">
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+</Project>

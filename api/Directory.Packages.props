@@ -1,0 +1,85 @@
+<Project>
+
+  <!--
+    Central Package Management.
+
+    The source template pinned versions per-project and had already drifted:
+    Template.csproj referenced Microsoft.AspNetCore.OpenApi at BOTH 10.0.4 and
+    10.0.6, and EF Core (10.0.6) / Npgsql (10.0.1) were pinned independently in
+    four places. One file, one version, no drift.
+
+    Every version below has been checked to exist on nuget.org. The solution
+    has still never been restored or compiled, so a transitive conflict is
+    possible, but no package id or version here is invented.
+
+    Asp.Versioning is pinned to 8.1.1 rather than the newer 10.2.1 because
+    8.1.1 is the version the ac-dotnet-api-template already runs on net10.0,
+    so it is known good. 10.2.1 is the .NET 10-aligned line and is the obvious
+    upgrade once the build is green.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+  </PropertyGroup>
+
+  <ItemGroup Label="API host">
+    <PackageVersion Include="Carter" Version="9.0.0" />
+    <PackageVersion Include="Asp.Versioning.Http" Version="8.1.1" />
+    <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
+    <PackageVersion Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+    <!--
+      Transitive pin. Swashbuckle 10.1.7 resolves Microsoft.OpenApi 2.4.1, which
+      NuGet audit flags as CVE-2026-49451 (high) — a stack overflow when parsing
+      OpenAPI documents with circular schema references. 2.7.5 is the first
+      fixed release on the 2.x line.
+
+      We generate rather than parse OpenAPI documents, so the practical
+      exposure is low, but a high-severity advisory in the restore log will be
+      picked up by SonarQube and by any departmental dependency scan.
+
+      Alternative: move to Swashbuckle 10.2.3, which resolves a fixed version
+      on its own and makes this pin unnecessary.
+    -->
+    <PackageVersion Include="Microsoft.OpenApi" Version="2.7.5" />
+    <PackageVersion Include="Serilog.AspNetCore" Version="10.0.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+    <!--
+      The source template's appsettings enriched with WithMachineName and
+      WithThreadId and used a compact JSON formatter, but never referenced the
+      packages that provide them, so Serilog silently ignored the settings.
+    -->
+    <PackageVersion Include="Serilog.Formatting.Compact" Version="3.0.0" />
+    <PackageVersion Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+    <PackageVersion Include="Serilog.Enrichers.Thread" Version="4.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup Label="Application">
+    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
+    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup Label="Persistence">
+    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.Relational" Version="10.0.6" />
+    <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.1" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.6" />
+  </ItemGroup>
+
+  <ItemGroup Label="Testing">
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageVersion Include="NUnit" Version="4.5.1" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.12.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+    <PackageVersion Include="Moq" Version="4.20.72" />
+    <PackageVersion Include="coverlet.collector" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.EntityFrameworkCore.InMemory" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.6" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.13.0" />
+  </ItemGroup>
+
+</Project>

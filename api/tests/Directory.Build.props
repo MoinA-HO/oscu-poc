@@ -1,0 +1,33 @@
+<Project>
+
+  <!--
+    Common test dependencies, declared once.
+
+    In the source template, NUnit, NUnit.Analyzers, NUnit3TestAdapter,
+    Microsoft.NET.Test.Sdk and coverlet.collector were copy-pasted into all six
+    test .csproj files (~15 lines each). Any version bump meant six edits and
+    the near certainty of missing one.
+  -->
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit.Analyzers">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="NUnit.Framework" />
+    <Using Include="Moq" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Cross-cutting technical concerns that are neither business rules nor data
+    access: clock, caching, messaging, blob storage, Key Vault, Service Bus.
+
+    Currently only the clock. Kept as a project because the Azure services on
+    the roadmap land here, and because IDateTimeProvider is what makes
+    CreatedDate deterministic in tests.
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OSCU.Application\OSCU.Application.csproj" />
+    <ProjectReference Include="..\OSCU.Domain\OSCU.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
