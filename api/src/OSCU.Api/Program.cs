@@ -73,6 +73,13 @@ app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {
+    // In development, create the database and apply pending migrations on startup
+    // so a fresh Postgres container works without running dotnet ef by hand.
+    // Other environments should apply migrations as a deployment step:
+    // dotnet ef database update --project src/OSCU.Persistence --startup-project src/OSCU.Api
+    await app.Services.ApplyMigrationsAsync();
+
+
     IApiVersionDescriptionProvider versionProvider =
         app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
 

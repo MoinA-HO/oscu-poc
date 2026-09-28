@@ -26,6 +26,12 @@ public class Referral
 
     public string ReferralReference { get; private set; } = null!;
 
+    //cpublic string Forename { get; set; } = null;
+
+    //public string Middlename { get; set; } = null;
+
+    //public string Surname { get; set; } = null;
+
     public string Subject { get; private set; } = null!;
 
     public string? Description { get; private set; }

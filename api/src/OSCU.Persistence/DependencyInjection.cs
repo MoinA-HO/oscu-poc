@@ -35,4 +35,16 @@ public static class DependencyInjection
 
         return services;
     }
+
+    /// <summary>
+    /// Creates the database if it doesn't exist and applies any pending
+    /// migrations. Call on the built service provider, not during registration.
+    /// </summary>
+    public static async Task ApplyMigrationsAsync(this IServiceProvider services)
+    {
+        await using AsyncServiceScope scope = services.CreateAsyncScope();
+        ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        await dbContext.Database.MigrateAsync();
+    }
 }
