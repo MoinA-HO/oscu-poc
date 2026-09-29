@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      // Uses the "http" launch profile (http://localhost:7501), which is the
+      // port the Vite dev proxy forwards /api to.
+      "name": "API",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build api",
+      "program": "${workspaceFolder}/api/src/OSCU.Api/bin/Debug/net10.0/OSCU.Api.dll",
+      "cwd": "${workspaceFolder}/api/src/OSCU.Api",
+      "launchSettingsFilePath": "${workspaceFolder}/api/src/OSCU.Api/Properties/launchSettings.json",
+      "launchSettingsProfile": "http",
+      "stopAtEntry": false,
+      "console": "internalConsole",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Now listening on:\\s+(https?://\\S+)",
+        "uriFormat": "%s/swagger"
+      }
+    },
+    {
+      // Starts the Vite dev server, then attaches a Chrome debugger once it is
+      // up, so breakpoints in ui/src hit. Stopping the session stops Vite.
+      "name": "UI",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "npm run dev",
+      "cwd": "${workspaceFolder}/ui",
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        // Vite colours the URL in its banner, so match the label and use the
+        // fixed port from vite.config.ts rather than capturing the URL.
+        "pattern": "Local:",
+        "uriFormat": "http://localhost:5173",
+        "webRoot": "${workspaceFolder}/ui"
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "API + UI",
+      "configurations": ["API", "UI"],
+      "stopAll": true
+    }
+  ]
+}
