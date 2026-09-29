@@ -20,11 +20,11 @@ public class SwaggerConfigureOptions(IApiVersionDescriptionProvider provider)
         {
             options.SwaggerDoc(description.GroupName, new OpenApiInfo
             {
-                Title = "Referral and Case Management API",
+                Title = "Referral and Task Management API",
                 Version = description.ApiVersion.ToString(),
                 Description = description.IsDeprecated
                     ? "This API version has been deprecated."
-                    : "Referral and case management for the Home Office."
+                    : "Referral and task management for the Home Office."
             });
         }
     }

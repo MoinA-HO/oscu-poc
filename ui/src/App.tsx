@@ -7,7 +7,7 @@ import { ReferralListPage } from '@/features/referrals/pages/ReferralListPage';
 
 export function App() {
   return (
-    <PageShell serviceName="Referral and Case Management">
+    <PageShell serviceName="Referral and Task Management">
       <Routes>
         <Route path="/" element={<Navigate to="/referrals" replace />} />
         <Route path="/referrals" element={<ReferralListPage />} />

@@ -1,4 +1,4 @@
-# Referral and Case Management
+# Referral and Task Management
 
 Referral CRUD for the Home Office, built from the Automation Centre
 `ac-dotnet-api-template` and `ac-react-template`.
@@ -42,11 +42,12 @@ docker compose up -d
 The compose file has a healthcheck, so `docker compose up -d` does not return
 until Postgres is actually accepting connections.
 
-### 2. Create the migration
+### 2. Create the migration (None Development Environment Only)
 
 The schema is **code first**: entities and `IEntityTypeConfiguration` classes
 are the source of truth, and the migration is generated from them. No
-migrations are checked in yet, so generate the first one:
+migrations are checked in yet unless in development, in which case they
+are automatically run in, or they can be manually triggered as needed:
 
 ```bash
 cd api
