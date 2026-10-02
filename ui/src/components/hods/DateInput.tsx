@@ -58,7 +58,7 @@ export function DateInput({ id, legend, hint, error, day, month, year }: DateInp
     </div>
   );
 
-  return (
+  return ( 
     <div className={`govuk-form-group${error ? ' govuk-form-group--error' : ''}`}>
       {/* role="group" ties the legend to all three inputs, so a screen reader
           announces "Date received, Day" rather than a bare "Day". */}
