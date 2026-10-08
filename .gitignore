@@ -33,3 +33,19 @@ coverage/
 # OS
 .DS_Store
 Thumbs.db
+
+# Azure Functions local development
+functions/src/AzuriteConfig
+functions/src/__azurite_db_blob__.json
+functions/src/__azurite_db_blob_extent__.json
+functions/src/__azurite_db_queue__.json
+functions/src/__azurite_db_queue_extent__.json
+functions/src/__azurite_db_table__.json
+functions/src/__blobstorage__/
+functions/src/__queuestorage__/
+
+# Functions local settings (contains secrets)
+functions/src/local.settings.json
+
+# Functions project VS Code settings
+functions/src/.vscode/
